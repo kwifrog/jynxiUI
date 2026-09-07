@@ -1,4 +1,11 @@
 ## Interface: 120100
-## Title: jynxiUI
+## Title: |cff7cebe3jynxi|rUI
 ## Notes: Comprehensive UI addon for World of Warcraft: Midnight
+## Author: JynxiJester
+## Version: 1.0
+## IconTexture: Interface\AddOns\jynxiUI\media\logo
+## SavedVariables: jynxiUIDB
 
+embeds.xml
+media\media.lua
+options\options.lua
