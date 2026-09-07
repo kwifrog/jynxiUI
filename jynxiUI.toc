@@ -1,0 +1,4 @@
+## Interface: 120100
+## Title: jynxiUI
+## Notes: Comprehensive UI addon for World of Warcraft: Midnight
+
