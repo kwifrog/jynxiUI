@@ -75,6 +75,7 @@ local function CreateOptionsPanel()
     end
 
     local panel = CreateFrame("Frame", "jynxiUIOptionsPanel", UIParent, "BackdropTemplate")
+    panel:Hide()
     panel:SetAllPoints()
     panel:SetBackdrop({
         bgFile = "Interface\\FrameGeneral\\UI-Background-Marble",
@@ -147,8 +148,45 @@ function addon:OpenOptions()
     end
 end
 
-local function FindMenuButton(name)
-    return _G[name] or (GameMenuFrame and GameMenuFrame[name])
+local function FindMenuButton(name, text)
+    local named = _G[name] or (GameMenuFrame and GameMenuFrame[name])
+    if named then
+        return named
+    end
+
+    if not GameMenuFrame then
+        return
+    end
+
+    local targetText = text or name
+    for _, child in ipairs({ GameMenuFrame:GetChildren() }) do
+        if child.GetObjectType and child:GetObjectType() == "Button"
+        and child.GetText and child:GetText() == targetText then
+            return child
+        end
+    end
+end
+
+local function SetButtonBlue(button)
+    local normal = button:GetNormalTexture()
+    if normal then
+        normal:SetVertexColor(0.10, 0.35, 0.90, 1)
+    end
+
+    local pushed = button:GetPushedTexture()
+    if pushed then
+        pushed:SetVertexColor(0.05, 0.20, 0.60, 1)
+    end
+
+    local highlight = button:GetHighlightTexture()
+    if highlight then
+        highlight:SetVertexColor(0.30, 0.70, 1.00, 1)
+    end
+
+    local fontString = button:GetFontString()
+    if fontString then
+        fontString:SetTextColor(0.35, 0.75, 1.00)
+    end
 end
 
 local function CreateEscapeMenuButton()
@@ -158,18 +196,25 @@ local function CreateEscapeMenuButton()
 
     local button = CreateFrame("Button", "GameMenuButtonJynxiUI", GameMenuFrame, "MainMenuFrameButtonTemplate")
     button:SetText("jynxiUI")
+    SetButtonBlue(button)
     button:SetScript("OnClick", function()
         HideUIPanel(GameMenuFrame)
         addon:OpenOptions()
     end)
 
-    local reference = FindMenuButton("GameMenuButtonAddons") or FindMenuButton("GameMenuButtonOptions")
+    local reference = FindMenuButton("GameMenuButtonMacros", MACROS or "Macros")
     if reference then
         button:SetSize(reference:GetWidth(), reference:GetHeight())
-        button.layoutIndex = (reference.layoutIndex or 0) - 0.5
+        button.layoutIndex = (reference.layoutIndex or 0) + 0.5
         button.topPadding = reference.topPadding
     else
-        button:SetSize(240, 26)
+        local fallback = FindMenuButton("GameMenuButtonAddons") or FindMenuButton("GameMenuButtonOptions")
+        if fallback then
+            button:SetSize(fallback:GetWidth(), fallback:GetHeight())
+            button.topPadding = fallback.topPadding
+        else
+            button:SetSize(240, 26)
+        end
         button.layoutIndex = 100
     end
 

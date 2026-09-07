@@ -7,5 +7,10 @@
 ## SavedVariables: jynxiUIDB
 
 embeds.xml
+
+core\util.lua
+core\cvars.lua
+
 media\media.lua
+
 options\options.lua
